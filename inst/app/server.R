@@ -19,12 +19,15 @@ server = function(input, output, session) {
    shinytoastr::toastr_info("filtering annotations...", position="top-center")
    sym = input$gene
    rad = input$radius
-   data(gtex_b38_lung_chr20_exc)
-   data(limgwcat_b38)
-   tab = gtex_b38_lung_chr20_exc |> filter_sym(sym, radius=rad) |> as.data.frame()
-   tab2 = limgwcat_b38 |> filter_sym(sym, radius=rad) |> as.data.frame()
+   #here I have to add the data banks options 
+   data(eval(as.symbol(input$track1)))
+   data(eval(as.symbol(input$track2)))
+   data(eval(as.symbol(input$track3)))
+   tab = (eval(as.symbol(input$track1))) |> filter_sym(sym, radius=rad) |> as.data.frame()
+   tab2 = (eval(as.symbol(input$track2))) |> filter_sym(sym, radius=rad) |> as.data.frame()
+   tab3 = (eval(as.symbol(input$track3))) |> filter_sym(sym, radius=rad) |> as.data.frame()
    bgt = build_gt()
-   tntplot3(tab, tab2, tt=bgt$tt, GT=bgt$GT, lab1="GTEx Lung", lab2="EBI GWASCAT")
+   tntplot5(tab, tab2, tab3, tt=bgt$tt, GT=bgt$GT, lab1="GTEx Lung", lab2="EBI GWASCAT", lab3="awesome")
   })
   output$desc = renderPrint({
    packageDescription("tnt4dn8")
@@ -32,16 +35,24 @@ server = function(input, output, session) {
   output$eqtltab = DT::renderDataTable({
    sym = input$gene
    rad = input$radius
-   data(gtex_b38_lung_chr20_exc)
-   gtex_b38_lung_chr20_exc |> filter_sym(sym, radius=rad) |> as.data.frame()
+   data(eval(as.symbol(input$track1)))
+   (eval(as.symbol(input$track1))) |> filter_sym(sym, radius=rad) |> as.data.frame()
   })
   output$gwastab = DT::renderDataTable({
    sym = input$gene
    rad = input$radius
-   data(limgwcat_b38)
-   limgwcat_b38 |> filter_sym(sym, radius=rad) |> as.data.frame()
+   data(eval(as.symbol(input$track2)))
+   (eval(as.symbol(input$track2)))|> filter_sym(sym, radius=rad) |> as.data.frame()
   })
+  output$track3 =  DT::renderDataTable({
+     ym = input$gene
+     rad = input$radius
+     data(eval(as.symbol(input$track3)))
+     (eval(as.symbol(input$track3))) |> filter_sym(sym, radius=rad) |> as.data.frame()
+  }
+  )
   observeEvent(input$stopBtn, {
     stopApp(NULL)
     })
 }
+

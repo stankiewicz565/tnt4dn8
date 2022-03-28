@@ -9,7 +9,7 @@ make_ui = function() fluidPage(
  sidebarLayout(
   sidebarPanel(
    helpText("tnt4dn8 demo"),
-   selectInput("gene", "gene", choices = sort(avail_syms_gtex()), selected="RBCK1"),
+   selectInput("gene", "gene", choices = sort(avail_syms_gtex()), selected="ADA"),
    numericInput("radius", "radius", min=0, max=1e6, step=1e4, value=5e4),
    actionButton("stopBtn", "stop app"),
    width=2
@@ -66,3 +66,4 @@ tntapp = function() {
  ui = make_ui()
  shiny::runApp( list(ui=ui, server=server) )
 }
+
